@@ -1,16 +1,26 @@
 <!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML to PDF Converter</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload with Progress Bar | CodingNepal</title>
+  <link rel="stylesheet" href="../static/styles/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
 </head>
 <body>
-    <h1>HTML to PDF Converter</h1>
+  <div class="wrapper">
+    <header>File Uploader JavaScript</header>
     <form action="/convert" method="post" enctype="multipart/form-data">
-        <input type="file" name="html_file"><br>
-        <textarea name="html_content" rows="10" cols="50" placeholder="Or enter HTML content here..."></textarea><br>
-        <button type="submit">Convert to PDF</button>
+      <input class="file-input" type="file" name="file_upload" hidden>
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p>Browse File to Upload</p>
     </form>
+    <section class="progress-area"></section>
+    <section class="uploaded-area"></section>
+  </div>
+
+  <script src="../static/js/script.js"></script>
+
 </body>
 </html>

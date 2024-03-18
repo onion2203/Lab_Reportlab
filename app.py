@@ -1,43 +1,41 @@
-from flask import Flask, request, render_template, send_file
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-import os
+from flask import Flask, render_template, request, send_file
+from reportlab.platypus import SimpleDocTemplate, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from io import BytesIO
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'uploads'
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+stream_file = BytesIO()
+content = []
 
-@app.route('/')
+def add_paragraph(text, content):
+    """ Add paragraph to document content"""
+    content.append(Paragraph(text))
+
+def get_document_template(stream_file: BytesIO):
+    """ Get SimpleDocTemplate """
+    return SimpleDocTemplate(stream_file)
+
+def build_document(document, content, **props):
+    """ Build pdf document based on elements added in `content`"""
+    document.build(content, **props)
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
 @app.route('/convert', methods=['POST'])
-def convert_to_pdf():
-    html_content = request.form['html_content']
-    html_file = request.files['html_file']
-    if html_file:
-        html_content = html_file.read().decode('utf-8')
-    elif not html_content:
-        return "No HTML content or file provided."
+def convert():
+    if request.method == 'POST':
+        html_file = request.files['file']
+        html_content = html_file.read().decode("utf-8")
+        print(html_content)
+        add_paragraph(html_content, content)
+        build_document(get_document_template(stream_file), content)
+        # Return the file as attachment
+        stream_file.seek(0)
+        return 200, {'Content-Type': 'application/pdf'}, stream_file
 
-    pdf_file = 'converted_file.pdf'
-
-    doc = SimpleDocTemplate(pdf_file, pagesize=letter)
-    styles = getSampleStyleSheet()
-    style = styles["Normal"]
-
-    paragraphs = []
-    for line in html_content.split('\n'):
-        paragraphs.append(Paragraph(line, style))
-        paragraphs.append(Spacer(1, 12))
-
-    doc.build(paragraphs)
-    
-    return send_file(pdf_file, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    app.run(debug=True)
