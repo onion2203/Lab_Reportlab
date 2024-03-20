@@ -34,7 +34,7 @@ def convert():
         build_document(get_document_template(stream_file), content)
         # Return the file as attachment
         stream_file.seek(0)
-        return 200, {'Content-Type': 'application/pdf'}, stream_file
+        return 200 #{'Content-Type': 'application/pdf'}, stream_file
 
 
 if __name__ == '__main__':
