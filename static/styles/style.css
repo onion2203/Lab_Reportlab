@@ -135,7 +135,7 @@ section .details span{
 }
 
 .background{
-  background-image: url("/assets/1000_F_443702089_Du3AvDIohGuY892HOcuAUv7UlZPlURcY.jpg");
+  background-image: url("../../assets/1000.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   position: absolute;

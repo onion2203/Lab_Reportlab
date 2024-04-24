@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, send_file
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
@@ -34,8 +35,12 @@ def convert():
         build_document(get_document_template(stream_file), content)
         # Return the file as attachment
         stream_file.seek(0)
-        return 200 #{'Content-Type': 'application/pdf'}, stream_file
+        open('converted.pdf', 'wb').write(stream_file.getvalue())
+        # Get the path to the converted PDF file
+        pdf_path = os.path.join(os.getcwd(), 'converted.pdf')
+        
+        return send_file(pdf_path, as_attachment=True, download_name='converted.pdf')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
